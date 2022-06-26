@@ -7,13 +7,19 @@
   "private": false,
   "devDependencies": {
     "@types/koa": "^2.13.4",
+    "@types/koa__router": "^8.0.11",
+    "@types/uuid": "^8.3.4",
+    "nodemon": "^2.0.18",
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "koa": "^2.13.4"
+    "@koa/router": "^10.1.1",
+    "koa": "^2.13.4",
+    "uuid": "^8.3.2"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "yarn build && node build/index.js"
+    "build": "rm -rf build && tsc",
+    "develop": "nodemon -e ts,js,mjs,json --ignore build --exec yarn start",
+    "start": "yarn build && node build/server/index.js"
   }
 }
