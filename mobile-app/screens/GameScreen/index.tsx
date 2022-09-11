@@ -30,75 +30,50 @@ export default function GameScreen({mode}: GameScreenProps) {
 
     const onBotMove: OnMoveFn = (state, whoAmI, makeMove) => {
         const emptyCells = [];
-        for (let x = 0; x < Engine.BOARD_SIXE; x++) {
-            for (let y = 0; y <Engine.BOARD_SIXE; y++) {
-                if (state[x][y] === Cell.Empty) {
-                    emptyCells.push([x,y]);
-                }
+        const bestMove = [];
+            if ((state[0][1] != Cell.Empty && state[0][1] === state[0][2] && state[0][0] === Cell.Empty) ||
+                (state[1][0] != Cell.Empty && state[1][0] === state[2][0] && state[0][0] === Cell.Empty) ||
+                (state[1][1] != Cell.Empty && state[1][1] === state[2][2] && state[0][0] === Cell.Empty)) { 
+                makeMove(0,0)
+            } else if (state[0][0] != Cell.Empty && state[0][0] == state[0][2] && state[0][1] === Cell.Empty ||
+                       state[1][1] != Cell.Empty && state[1][1] == state[2][1] && state[0][1] === Cell.Empty) { 
+                makeMove(0,1)
+            } else if (state[0][0] != Cell.Empty && state[0][0] == state[0][1] && state[0][2] === Cell.Empty ||
+                       state[1][2] != Cell.Empty && state[1][2] == state[2][2] && state[0][2] === Cell.Empty ||
+                       state[1][1] != Cell.Empty && state[1][1] == state[2][0] && state[0][2] === Cell.Empty) {
+                makeMove(0,2); 
+            } else if (state[0][0] != Cell.Empty && state[0][0] == state[2][0] && state[1][0] === Cell.Empty ||
+                       state[1][1] != Cell.Empty && state[1][1] == state[1][2] && state[1][0] === Cell.Empty) {
+                makeMove(1,0);
+            } else if (state[1][1] === Cell.Empty) {
+                makeMove(1,1);
+            } else if (state[1][0] != Cell.Empty && state[1][0] == state[1][1] && state[1][2] === Cell.Empty ||
+                       state[0][2] != Cell.Empty && state[0][2] == state[2][2] && state[1][2] === Cell.Empty ) {
+                makeMove(1,2); 
+            } else if (state[0][0] != Cell.Empty && state[0][0] == state[1][0] && state[2][0] === Cell.Empty ||
+                       state[0][2] != Cell.Empty && state[0][2] == state[1][1] && state[2][0] === Cell.Empty ||
+                       state[2][1] != Cell.Empty && state[2][1] == state[2][2] && state[2][0] === Cell.Empty) {
+                makeMove(2,0); 
+            } else if ((state[0][1] != Cell.Empty && state[0][1] === state[1][1] && state[2][1] === Cell.Empty) ||
+                       (state[2][0] != Cell.Empty && state[2][0] === state[2][2] && state[2][1] === Cell.Empty)) {
+                makeMove(2,1);
+            } else if (state[0][0] != Cell.Empty && state[0][0] == state[1][1] && state[2][2] === Cell.Empty ||
+                       state[0][2] != Cell.Empty && state[0][2] == state[1][2] && state[2][2] === Cell.Empty ||
+                       state[2][0] != Cell.Empty && state[2][0] == state[2][1] && state[2][2] === Cell.Empty) {
+                makeMove(2,2);
+            } else {  
+                for (let x = 0; x < Engine.BOARD_SIXE; x++) {
+                    for (let y = 0; y <Engine.BOARD_SIXE; y++) {
+                        if (state[x][y] === Cell.Empty) {
+                            emptyCells.push([x,y]);         //добавляем в массив координаты пустой ячейки
+                        }
+                    }
+                }          
+                const randomIndex = Math.floor(Math.random() * emptyCells.length);
+                const [x,y] = emptyCells[randomIndex];
+                makeMove(x,y);
             }
-        }
-
-        /*if (state[1][1] === Cell.Empty) {
-            const [x,y] = [1,1];
-            makeMove(x,y);
-        }
-        else if ((state[0][0] != Cell.Empty) && (state[0][2] != Cell.Empty))
-        {
-            const [x,y] = [0,1];
-            makeMove(x,y);
-        }
-        else if ((state[0][0] != Cell.Empty) && (state[2][0] != Cell.Empty))
-        {
-            const [x,y] = [1,0];
-            makeMove(x,y);
-        }
-        else if (state[1][1] === Cell.X || state[1][1] === Cell.O ){
-            const randomIndex = Math.floor(Math.random() * emptyCells.length);
-            const [x,y] = emptyCells[randomIndex];
-            makeMove(x,y);
-        }        */
-        /*if (whoAmI === Cell.X)
-        {
-            let c = 0;
-            for (let x = 0; x < 1; x++) {
-                for (let y = 0; y < 1; y++) {
-                    if ((state[x][y] === Cell.O) && (state[x][y] === state[x][y+1])) {
-                        const [a,b] = [0,2];
-                        makeMove(a,b);
-                        c+=1;
-                    }                    
-                    if ((state[x][y] === Cell.O) && (state[x][y] === state[x][y+2])) {
-                        const [a,b] = [0,1];
-                        makeMove(a,b);
-                        c+=1;
-                    } 
-                    if ((state[x][y+1] === Cell.O) && (state[x][y+1] === state[x][y+2])) {
-                        const [a,b] = [0,0];
-                        makeMove(a,b);
-                        c+=1;
-                    } 
-                    if (c===0) {
-                        const randomIndex = Math.floor(Math.random() * emptyCells.length);
-                        const [a,b] = emptyCells[randomIndex];
-                        makeMove(a,b);
-                        c+=1
-                    }   
-                    
-                }
-            }
-
-            
-        }
-        if (whoAmI === Cell.O && c)
-        {
-            const [x,y] = emptyCells[0]
-            makeMove(x,y);
-        }*/
-        
-        const randomIndex = Math.floor(Math.random() * emptyCells.length);
-        const [x,y] = emptyCells[randomIndex];
-        makeMove(x,y);
-        
+ 
     };
 
     const onGameEnd = (winner: Cell) => {
